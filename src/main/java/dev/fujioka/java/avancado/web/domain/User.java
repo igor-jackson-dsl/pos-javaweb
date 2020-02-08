@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 
 @Entity
@@ -16,8 +17,9 @@ import java.util.Date;
 @JsonIgnoreProperties(value = {"dtCreation", "dtUpdate"},
         allowGetters = true)
 public class User implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -40,6 +42,11 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date dtUpdate;
+    
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userOrder")
+	private Set<SalesOrder> ordersUser;
+    
+    
 
     public User() {
     }
@@ -99,8 +106,17 @@ public class User implements Serializable {
     public void setDtUpdate(Date dtUpdate) {
         this.dtUpdate = dtUpdate;
     }
+    
 
-    @Override
+    public Set<SalesOrder> getOrdersUser() {
+		return ordersUser;
+	}
+
+	public void setOrdersUser(Set<SalesOrder> ordersUser) {
+		this.ordersUser = ordersUser;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
